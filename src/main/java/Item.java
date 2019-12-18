@@ -1,5 +1,7 @@
+
 public class Item {
     private int id;
+
     private ItemType itemType;
     private int quality;
     private int owner;  // owner - player.id

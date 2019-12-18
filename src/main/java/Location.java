@@ -1,17 +1,25 @@
+import javax.persistence.*;
+
+@Entity
+@Table (name = "players")
 public class Location {
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     private String description;
+
     private String type;
 
     public Location(){ }
 
-    public Location(String id, String description, String type) {
+    public Location(int id, String description, String type) {
         this.id = id;
         this.description = description;
         this.type = type;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
     public String getType() {
@@ -19,9 +27,6 @@ public class Location {
     }
     public String getDescription() {
         return description;
-    }
-    public void setId(String id) {
-        this.id = id;
     }
     public void setDescription(String description) {
         this.description = description;
