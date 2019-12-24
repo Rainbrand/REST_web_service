@@ -1,45 +1,63 @@
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import java.util.List;
-import java.util.Map;
 
 public class ItemService {
-    private static Map<Integer, Item> items = new HashMap<>();
-    private static ItemTypeService itemTypeService;
-
     public Item findById(int id) {
-        return (Item) items.get(itemTypeService.findById(id));
+        return HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession().
+                get(Item.class, id);
     }
 
-    public Item add(int id, ItemType itemType, int quality, int owner) {
-        Item item = new Item(id, itemType, quality, owner);
-        items.put(id, item);
+    public Item add(ItemType itemType, int quality, Player owner) {
+        Item item = new Item(itemType, quality, owner);
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(item);
+        transaction.commit();
+        session.close();
         return item;
     }
 
-    public Item update(int id, ItemType itemType, int quality, int owner) {
-        Item item = (Item) items.get(itemType);
-        if (id != 0){
-            item.setId(id);
-        }
+    public Item update(int id, ItemType itemType, int quality, Player owner) {
+        Session session = HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession();
+        Transaction transaction = session.beginTransaction();
+        Item item = session.get(Item.class, id);
         if (itemType != null) {
             item.setItemType(itemType);
         }
-        if (quality != 0) {
-            item.setQuality(quality);
-        }
-        if (owner != 0) {
+        item.setQuality(quality);
+        if (owner != null) {
             item.setOwner(owner);
         }
-        items.put(id, item);
+        session.update(item);
+        transaction.commit();
+        session.close();
         return item;
     }
 
     public void delete(int id) {
-        items.remove(id);
+        Session session = HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession();
+        Transaction transaction = session.beginTransaction();
+        Item item  = (Item) session.load(Item.class, id);
+        session.delete(item);
+        session.flush();
+        transaction.commit();
+        session.close();
     }
 
     public List findAll() {
-        return new ArrayList<>(items.values());
+        List items = HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession().
+                createQuery("FROM Item")
+                .list();
+        return items;
     }
 }

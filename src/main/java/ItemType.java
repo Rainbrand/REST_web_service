@@ -1,18 +1,26 @@
+import com.sun.istack.NotNull;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "item_types")
 public class ItemType {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @NotNull
     private String name;
 
-    public ItemType(int id, String name) {
-        this.id = id;
+    public ItemType(){};
+
+    public ItemType(String name) {
         this.name = name;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

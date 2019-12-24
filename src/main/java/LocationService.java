@@ -1,18 +1,22 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
 
 public class LocationService {
-    public Location findById(String id) {
+    private static ObjectMapper om = new ObjectMapper();
+
+    public Location findById(int id) {
         return HibernateSessionFactoryUtil.
                 getSessionFactory().
                 openSession().
                 get(Location.class, id);
     }
 
-    public Location add(int id, String description, String type) {
-        Location location = new Location(id, description, type);
+    public Location add(String description, String type) {
+        Location location = new Location(description, type);
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
         session.save(location);
@@ -33,25 +37,30 @@ public class LocationService {
         if (type != null) {
             location.setType(type);
         }
-        session.save(location);
+        session.update(location);
         transaction.commit();
+        session.close();
         return location;
     }
 
-    public void delete(String id) {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+    public void delete(int id) {
+        Session session = HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession();
         Transaction transaction = session.beginTransaction();
-        Location location  = (Location)session.load(Location.class, id);
+        Location location  = session.load(Location.class, id);
         session.delete(location);
+        session.flush();
+        transaction.commit();
         session.close();
-        System.out.println("Location " + id + " deleted.");
     }
 
-    public List findAll() {
-        return HibernateSessionFactoryUtil.
+    public List findAll() throws JsonProcessingException {
+        List locations = HibernateSessionFactoryUtil.
                 getSessionFactory().
                 openSession().
                 createQuery("FROM Location")
                 .list();
+        return locations;
     }
 }

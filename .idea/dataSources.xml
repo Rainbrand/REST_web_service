@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="SOA_Lab_4@localhost" uuid="64a74691-4848-4b8c-9c3e-d50788a67e8c">
+    <data-source source="LOCAL" name="REST_Lab@localhost" uuid="62cd5718-80d1-4293-945e-096792babf67">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/SOA_Lab_4</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/REST_Lab</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="110b70b8-0d4f-4ff0-a830-e80b37a2485b">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>Hibernate
+
+F:/Code/SOA/SOA_Lab_4/src/main/resources/hibernate.cfg.xml</remarks>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/REST_Lab?createDatabaseIfNotExist=true&amp;useUnicode=yes&amp;characterEncoding=UTF-8</jdbc-url>
     </data-source>
   </component>
 </project>

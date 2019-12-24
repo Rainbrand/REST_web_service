@@ -1,26 +1,36 @@
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class PlayerService {
-    private static Map<Integer, Player> players = new HashMap<>();
+    private static ObjectMapper om = new ObjectMapper();
 
     public Player findById(int id) {
-        return (Player) players.get(id);
+        return HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession().
+                get(Player.class, id);
     }
 
-    public Player add(int id, String name, String playerClass, String email, int level, String location) {
-        Player player = new Player(id, name, playerClass, email, level, location);
-        players.put(id, player);
+    public Player add(String name, String playerClass, String email, int level, Location location) {
+        Player player = new Player(name, playerClass, email, level, location);
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(player);
+        transaction.commit();
+        session.close();
         return player;
     }
 
-    public Player update(int id, String name, String playerClass, String email, int level, String location) {
-        Player player = (Player) players.get(id);
-        if (id != 0) {
-            player.setId(id);
-        }
+    public Player update(int id, String name, String playerClass, String email, int level, Location location) {
+        Session session = HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession();
+        Transaction transaction = session.beginTransaction();
+        Player player = session.get(Player.class, id);
         if (name != null) {
             player.setName(name);
         }
@@ -36,15 +46,30 @@ public class PlayerService {
         if (location != null) {
             player.setLocation(location);
         }
-        players.put(id, player);
+        session.update(player);
+        transaction.commit();
+        session.close();
         return player;
     }
 
     public void delete(int id) {
-        players.remove(id);
+        Session session = HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession();
+        Transaction transaction = session.beginTransaction();
+        Player player  = (Player)session.load(Player.class, id);
+        session.delete(player);
+        session.flush();
+        transaction.commit();
+        session.close();
     }
 
-    public List findAll() {
-        return new ArrayList<>(players.values());
+    public List findAll() throws JsonProcessingException {
+        List players = HibernateSessionFactoryUtil.
+                getSessionFactory().
+                openSession().
+                createQuery("FROM Player")
+                .list();
+        return players;
     }
 }

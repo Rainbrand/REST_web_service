@@ -12,11 +12,15 @@ public class HibernateSessionFactoryUtil {
             try {
                 Configuration configuration = new Configuration().configure();
                 configuration.addAnnotatedClass(Location.class);
+                configuration.addAnnotatedClass(Player.class);
+                configuration.addAnnotatedClass(ItemType.class);
+                configuration.addAnnotatedClass(Item.class);
+                configuration.addAnnotatedClass(Message.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory(builder.build());
 
             } catch (Exception e) {
-                System.out.println("Исключение!" + e);
+                System.out.println(e);
             }
         }
         return sessionFactory;

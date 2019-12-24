@@ -1,13 +1,29 @@
+import com.sun.istack.NotNull;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "items")
 public class Item {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @OneToOne
+    @JoinColumn(name = "item_type_id")
     private ItemType itemType;
-    private int quality;
-    private int owner;  // owner - player.id
 
-    public Item(int id, ItemType itemType, int quality, int owner) {
-        this.id = id;
+    @NotNull
+    private int quality;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "owner")
+    private Player owner;
+
+    public Item(){};
+
+    public Item(ItemType itemType, int quality, Player owner) {
         this.itemType = itemType;
         this.quality = quality;
         this.owner = owner;
@@ -15,10 +31,6 @@ public class Item {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public ItemType getItemType() {
@@ -37,11 +49,11 @@ public class Item {
         this.quality = quality;
     }
 
-    public int getOwner() {
+    public Player getOwner() {
         return owner;
     }
 
-    public void setOwner(int owner) {
+    public void setOwner(Player owner) {
         this.owner = owner;
     }
 }

@@ -1,20 +1,23 @@
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 
 @Entity
-@Table (name = "players")
+@Table (name = "locations")
 public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
     private String description;
 
+    @NotNull
     private String type;
 
     public Location(){ }
 
-    public Location(int id, String description, String type) {
-        this.id = id;
+    public Location(String description, String type) {
         this.description = description;
         this.type = type;
     }
@@ -35,8 +38,8 @@ public class Location {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "Location [id =" + id  + ", description =" + description + ", type =" + type + "]";
-    }
+//    @Override
+//    public String toString() {
+//        return "Location [id : " + id + ",\n\tdescription : " + description + ",\n\ttype : " + type + "]\n";
+//    }
 }
